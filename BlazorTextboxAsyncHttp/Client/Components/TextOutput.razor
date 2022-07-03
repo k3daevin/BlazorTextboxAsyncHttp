@@ -1,0 +1,18 @@
+﻿@inject ILogger<TextOutput> Logger
+@inject IJSRuntime JSRuntime;
+
+
+<h3>TextOutput</h3>
+
+<div @ref="DivElement"></div>
+
+
+@code {
+    private ElementReference DivElement;
+
+    public async Task SetContentAsync(string html)
+    {
+        await JSRuntime.InvokeVoidAsync("setElementContent", DivElement, html);
+        await InvokeAsync(StateHasChanged);
+    }
+}

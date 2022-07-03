@@ -1,0 +1,20 @@
+﻿@inject ILogger<TextInput> Logger
+@inject IJSRuntime JSRuntime;
+
+
+<h3>TextInput</h3>
+
+<div contenteditable="true" @oninput="OnInput" @ref="DivElement"></div>
+
+@code {
+    public string Content { get; private set; }
+
+    private ElementReference DivElement;
+    
+    private async Task OnInput(ChangeEventArgs args)
+    {
+        var content = await JSRuntime.InvokeAsync<string>("getElementContent", DivElement);
+        //Logger.LogInformation(content);
+        Content = content;
+    }
+}
