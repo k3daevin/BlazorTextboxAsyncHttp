@@ -7,13 +7,12 @@
 
 <h3>WordCountPage</h3>
 
-<button @onclick="DoStuff">Manual</button>
-
 
 <div class="container">
     <div class="row">
         <div class="col">
-            <TextInput @ref="_textInput" OnInputFinished="DoStuff"/>
+            <TextInput @ref="_textInput" OnInputFinished="DoStuffAsync"/>
+            <button @onclick="ResetAsync">Reset</button>
         </div>
         <div class="col">
             <TextOutput @ref="_textOutput"/>
@@ -34,11 +33,23 @@
 
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-    private async Task DoStuff()
+    private void Cancel()
     {
         _cancellationTokenSource.Cancel();
-        _cancellationTokenSource = new CancellationTokenSource();
+        _cancellationTokenSource = new CancellationTokenSource();        
+    }
 
+    private async Task ResetAsync()
+    {
+        Cancel();
+        await _textInput.ResetAsync();
+        await _textOutput.ResetAsync();
+        await _charCount.ResetAsync();
+    }
+
+    private async Task DoStuffAsync()
+    {
+        Cancel();
         var httpClient = HttpClientFactory.CreateClient("self");
 
         var cancellationToken = _cancellationTokenSource.Token;

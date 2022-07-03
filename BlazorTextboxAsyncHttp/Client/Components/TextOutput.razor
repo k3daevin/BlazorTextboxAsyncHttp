@@ -19,6 +19,12 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    public async Task ResetAsync()
+    {
+        await SetContentAsync("");
+    }
+
+
     public async Task SetContentAsync(string html)
     {
         _class = "";

@@ -4,7 +4,7 @@
 
 <h3>TextInput</h3>
 
-<div contenteditable="true" @oninput="OnInput" @ref="DivElement"></div>
+<div contenteditable="true" @oninput="OnInput" @ref="DivElement" class="border"></div>
 
 @code {
     public string Content { get; private set; } = string.Empty;
@@ -19,6 +19,13 @@
             AutoReset = false,
             Enabled = false,
         };
+
+    public async Task ResetAsync()
+    {
+        await JSRuntime.InvokeVoidAsync("setElementContent", DivElement, "");
+        await InvokeAsync(StateHasChanged);
+    }
+
 
     protected override Task OnInitializedAsync()
     {

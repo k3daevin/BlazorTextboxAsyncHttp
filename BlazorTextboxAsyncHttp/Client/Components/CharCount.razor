@@ -23,6 +23,11 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    public async Task ResetAsync()
+    {
+        await SetDataAsync(null);
+    }
+
 
     public async Task SetDataAsync(Step2Response step2Response)
     {
