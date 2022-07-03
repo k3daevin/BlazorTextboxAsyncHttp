@@ -7,20 +7,21 @@
 <div contenteditable="true" @oninput="OnInput" @ref="DivElement"></div>
 
 @code {
-    public string Content { get; private set; }
+    public string Content { get; private set; } = string.Empty;
+
+    [Parameter]
+    public EventCallback OnInputFinished { get; set; }
 
     private ElementReference DivElement;
 
-    private System.Timers.Timer _timer;
-
-    protected override Task OnInitializedAsync()
-    {
-        _timer = new System.Timers.Timer(500)
+    private System.Timers.Timer _timer = new System.Timers.Timer(500) //500ms
         {
             AutoReset = false,
             Enabled = false,
-
         };
+
+    protected override Task OnInitializedAsync()
+    {
         _timer.Elapsed += ElapsedEventHandler;
 
         return base.OnInitializedAsync();
@@ -30,7 +31,8 @@
     {
         var content = await JSRuntime.InvokeAsync<string>("getElementContent", DivElement);
         Logger.LogInformation(content);
-        Content = content;        
+        Content = content;
+        await OnInputFinished.InvokeAsync();
     }
 
     private void OnInput(ChangeEventArgs args)
