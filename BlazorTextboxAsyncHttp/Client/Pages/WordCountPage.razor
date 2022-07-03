@@ -32,28 +32,35 @@
     private TextOutput _textOutput;
     private CharCount _charCount;
 
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
     private async Task Manual()
     {
+        _cancellationTokenSource.Cancel();
+        _cancellationTokenSource = new CancellationTokenSource();
+
         var httpClient = HttpClientFactory.CreateClient("self");
+
+        var cancellationToken = _cancellationTokenSource.Token;
 
 
         var step1Request = new Step1Request { Text = _textInput.Content };
-        var step1HttpResponse = await httpClient.PostAsJsonAsync("Step1", step1Request);
+        var step1HttpResponse = await httpClient.PostAsJsonAsync("Step1", step1Request, cancellationToken);
         if (step1HttpResponse.IsSuccessStatusCode == false)
         {
             throw new Exception("Step1 Fehler");
         };
-        var step1Response = await step1HttpResponse.Content.ReadFromJsonAsync<Step1Response>();
+        var step1Response = await step1HttpResponse.Content.ReadFromJsonAsync<Step1Response>(cancellationToken: cancellationToken);
         await _textOutput.SetContentAsync(step1Response.Text);
 
 
         var step2Request = new Step2Request { Text = step1Response.Text };
-        var step2HttpResponse = await httpClient.PostAsJsonAsync("Step2", step2Request);
+        var step2HttpResponse = await httpClient.PostAsJsonAsync("Step2", step2Request, cancellationToken);
         if (step2HttpResponse.IsSuccessStatusCode == false)
         {
             throw new Exception("Step2 Fehler");
         }
-        var step2Response = await step2HttpResponse.Content.ReadFromJsonAsync<Step2Response>();
+        var step2Response = await step2HttpResponse.Content.ReadFromJsonAsync<Step2Response>(cancellationToken: cancellationToken);
         await _charCount.SetDataAsync(step2Response);
 
 
