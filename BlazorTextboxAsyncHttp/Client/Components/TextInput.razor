@@ -10,11 +10,32 @@
     public string Content { get; private set; }
 
     private ElementReference DivElement;
-    
-    private async Task OnInput(ChangeEventArgs args)
+
+    private System.Timers.Timer _timer;
+
+    protected override Task OnInitializedAsync()
+    {
+        _timer = new System.Timers.Timer(500)
+        {
+            AutoReset = false,
+            Enabled = false,
+
+        };
+        _timer.Elapsed += ElapsedEventHandler;
+
+        return base.OnInitializedAsync();
+    }
+
+    private async void ElapsedEventHandler(object? sender, System.Timers.ElapsedEventArgs e)
     {
         var content = await JSRuntime.InvokeAsync<string>("getElementContent", DivElement);
-        //Logger.LogInformation(content);
-        Content = content;
+        Logger.LogInformation(content);
+        Content = content;        
+    }
+
+    private void OnInput(ChangeEventArgs args)
+    {
+        _timer.Stop();
+        _timer.Start();
     }
 }

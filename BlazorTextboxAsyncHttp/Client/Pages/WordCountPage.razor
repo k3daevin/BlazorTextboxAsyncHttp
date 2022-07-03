@@ -62,7 +62,7 @@
         }
         var step2Response = await step2HttpResponse.Content.ReadFromJsonAsync<Step2Response>(cancellationToken: cancellationToken);
         await _charCount.SetDataAsync(step2Response);
-
-
     }
+
+
 }
