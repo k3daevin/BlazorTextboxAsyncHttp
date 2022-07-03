@@ -7,13 +7,13 @@
 
 <h3>WordCountPage</h3>
 
-<button @onclick="Manual">Manual</button>
+<button @onclick="DoStuff">Manual</button>
 
 
 <div class="container">
     <div class="row">
         <div class="col">
-            <TextInput @ref="_textInput" OnInputFinished="Manual"/>
+            <TextInput @ref="_textInput" OnInputFinished="DoStuff"/>
         </div>
         <div class="col">
             <TextOutput @ref="_textOutput"/>
@@ -34,7 +34,7 @@
 
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-    private async Task Manual()
+    private async Task DoStuff()
     {
         _cancellationTokenSource.Cancel();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -43,6 +43,8 @@
 
         var cancellationToken = _cancellationTokenSource.Token;
 
+        await _textOutput.SetLoadingAsync();
+        await _charCount.SetLoadingAsync();
 
         var step1Request = new Step1Request { Text = _textInput.Content };
         var step1HttpResponse = await httpClient.PostAsJsonAsync("Step1", step1Request, cancellationToken);

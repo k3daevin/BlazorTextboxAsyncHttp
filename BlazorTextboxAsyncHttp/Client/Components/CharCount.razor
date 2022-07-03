@@ -1,23 +1,33 @@
 ﻿@using BlazorTextboxAsyncHttp.Shared
 <h3>CharCount</h3>
 
-@if (Data == null)
-{
-    <p>Keine Daten</p>
-} else
+<div class="@_class">
+@if (Data != null)
 {
     @foreach(var kvp in Data.CharCount)
     {
         <p>@kvp.Key: @kvp.Value</p>
     }
 }
+</div>
 
 @code {
     private Step2Response Data = null;
 
+    private string _class = "";
+
+    public async Task SetLoadingAsync()
+    {
+        _class = "loader";
+        Data = null;
+        await InvokeAsync(StateHasChanged);
+    }
+
+
     public async Task SetDataAsync(Step2Response step2Response)
     {
         Data = step2Response;
-        InvokeAsync(StateHasChanged);
+        _class = "";
+        await InvokeAsync(StateHasChanged);
     }
 }

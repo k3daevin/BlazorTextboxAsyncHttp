@@ -4,15 +4,30 @@
 
 <h3>TextOutput</h3>
 
-<div @ref="DivElement"></div>
+<div @ref="DivElement" class="@_class"></div>
 
 
 @code {
     private ElementReference DivElement;
 
+    private string _class = "";
+
+    public async Task SetLoadingAsync()
+    {
+        _class = "loader";
+        await SetDivElementContent("");
+        await InvokeAsync(StateHasChanged);
+    }
+
     public async Task SetContentAsync(string html)
     {
-        await JSRuntime.InvokeVoidAsync("setElementContent", DivElement, html);
+        _class = "";
+        await SetDivElementContent(html);
         await InvokeAsync(StateHasChanged);
+    }
+
+    private ValueTask SetDivElementContent(string html)
+    {
+        return JSRuntime.InvokeVoidAsync("setElementContent", DivElement, html);
     }
 }
