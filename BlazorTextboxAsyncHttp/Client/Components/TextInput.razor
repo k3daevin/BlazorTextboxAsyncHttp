@@ -1,6 +1,6 @@
 ﻿@inject ILogger<TextInput> Logger
 @inject IJSRuntime JSRuntime;
-
+@implements IDisposable
 
 <h3>TextInput</h3>
 
@@ -40,6 +40,11 @@
         Logger.LogInformation(content);
         Content = content;
         await OnInputFinished.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        _timer.Stop();
     }
 
     private void OnInput(ChangeEventArgs args)

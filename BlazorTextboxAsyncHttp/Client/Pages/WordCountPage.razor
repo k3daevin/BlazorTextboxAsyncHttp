@@ -7,26 +7,37 @@
 
 <h3>WordCountPage</h3>
 
-
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <TextInput @ref="_textInput" OnInputFinished="DoStuffAsync"/>
-            <button @onclick="ResetAsync">Reset</button>
+<button @onclick="ToggleShow">Toggle</button>
+@if (Show)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <TextInput @ref="_textInput" OnInputFinished="DoStuffAsync"/>
+                <button @onclick="ResetAsync">Reset</button>
+            </div>
+            <div class="col">
+                <TextOutput @ref="_textOutput"/>
+            </div>
         </div>
-        <div class="col">
-            <TextOutput @ref="_textOutput"/>
+        <div class="row">
+            <div class="col">
+                <CharCount @ref="_charCount"/>
+            </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <CharCount @ref="_charCount"/>
-        </div>
-    </div>
-</div>
+}
 
 
 @code {
+    private bool Show = true;
+
+    private void ToggleShow()
+    {
+        Show = !Show;
+        Cancel();
+    }
+
     private TextInput _textInput;
     private TextOutput _textOutput;
     private CharCount _charCount;
